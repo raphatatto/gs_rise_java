@@ -38,34 +38,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // API REST, sem sessão
-                .authenticationProvider(authenticationProvider())
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        // Swagger / docs / actuator: públicos (ajusta se tiver isso)
-                        .requestMatchers(
-                                "/v3/api-docs/**",
-                                "/swagger-ui/**",
-                                "/swagger-ui.html",
-                                "/actuator/**"
-                        ).permitAll()
-
-                        // cadastro de usuário: público
-                        .requestMatchers(HttpMethod.POST, "/api/v1/usuarios").permitAll()
-                        .requestMatchers("/api/v1/ia/**").authenticated()
-
-                         .requestMatchers("/health").permitAll()
-
-                        // Endpoints de leitura de cursos: qualquer usuário autenticado
-                        .requestMatchers(HttpMethod.GET, "/api/v1/cursos/**").authenticated()
-
-                        // Exemplo: endpoints de currículos e trilhas: autenticados
-                        .requestMatchers("/api/v1/curriculos/**", "/api/v1/trilhas/**", "/api/v1/objetivos/**").authenticated()
-
-                        // Qualquer outra coisa: autenticado
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll() // 🔥 libera todos os endpoints
                 )
-                .httpBasic(Customizer.withDefaults()); // autenticação HTTP Basic
+                .httpBasic(httpBasic -> httpBasic.disable())
+                .formLogin(form -> form.disable());
 
         return http.build();
     }
+
 }
