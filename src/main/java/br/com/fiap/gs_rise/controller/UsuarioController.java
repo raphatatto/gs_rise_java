@@ -5,7 +5,9 @@ import br.com.fiap.gs_rise.dto.usuario.UsuarioResponseDTO;
 import br.com.fiap.gs_rise.service.UsuarioService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +22,11 @@ public class UsuarioController {
     private final UsuarioService usuarioService;
 
     @GetMapping
-    public ResponseEntity<Page<UsuarioResponseDTO>> listar(Pageable pageable) {
-        return ResponseEntity.ok(usuarioService.listar(pageable));
+    public Page<UsuarioResponseDTO> listar(@ParameterObject Pageable pageable) {
+        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
+        return usuarioService.listar(pageable);
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioResponseDTO> buscarPorId(@PathVariable Integer id) {
@@ -43,7 +47,6 @@ public class UsuarioController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deletar(@PathVariable Integer id) {
         usuarioService.deletar(id);
         return ResponseEntity.noContent().build();

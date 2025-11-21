@@ -63,9 +63,6 @@ public class UsuarioService {
         Usuario usuario = new Usuario();
         updateEntityFromDto(dto, usuario);
         Usuario salvo = usuarioRepository.save(usuario);
-        if (usuarioRepository.existsByEmail(dto.getEmail())) {
-            throw new BusinessException("Email já cadastrado");
-        }
         return toResponse(salvo);
 
     }

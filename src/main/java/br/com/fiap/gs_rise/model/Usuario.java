@@ -6,7 +6,7 @@ import lombok.*;
 import java.util.List;
 
 @Entity
-@Table(name = "tb_rise_usuario")
+@Table(name = "tb_rise_usuario", schema = "dbo")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -33,7 +33,7 @@ public class Usuario {
     @Column(name = "telefone", length = 20)
     private String telefone;
 
-    @Column(name = "desc", length = 500)
+    @Column(name = "descricao", length = 500)
     private String descricao;
 
     @Column(name = "habilidades", length = 500)

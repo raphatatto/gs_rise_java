@@ -39,13 +39,28 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
+                .authenticationProvider(authenticationProvider())
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll() // 🔥 libera todos os endpoints
+                        // 🔓 Swagger / docs sempre liberados
+                        .requestMatchers(
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html"
+                        ).permitAll()
+
+                        // 🔓 Health se existir
+                        .requestMatchers("/health").permitAll()
+
+                        // 🔒 SOMENTE DELETE da API exige autenticação
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/**").authenticated()
+
+                        // 🔓 TODO o resto (GET, POST, PUT etc.) é público
+                        .anyRequest().permitAll()
                 )
-                .httpBasic(httpBasic -> httpBasic.disable())
+                // basic auth só será usado quando alguém chamar DELETE
+                .httpBasic(Customizer.withDefaults())
                 .formLogin(form -> form.disable());
 
         return http.build();
     }
-
 }
