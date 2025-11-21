@@ -24,6 +24,17 @@ public class TrilhaObjetivoController {
     public ResponseEntity<TrilhaObjetivoResponseDTO> criar(@Valid @RequestBody TrilhaObjetivoRequestDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.criar(dto));
     }
+    @PutMapping("/{id}")
+    public ResponseEntity<TrilhaObjetivoResponseDTO> atualizar(@PathVariable Integer id,
+                                                               @Valid @RequestBody TrilhaObjetivoRequestDTO dto) {
+        return ResponseEntity.ok(service.atualizar(id, dto));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletar(@PathVariable Integer id) {
+        service.deletar(id);
+        return ResponseEntity.noContent().build();
+    }
     @GetMapping
     public ResponseEntity<Page<TrilhaObjetivoResponseDTO>> listar(@ParameterObject Pageable pageable) {
         pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());

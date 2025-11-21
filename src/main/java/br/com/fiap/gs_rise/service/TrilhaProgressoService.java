@@ -45,6 +45,21 @@ public class TrilhaProgressoService {
 
         return toResponse(repository.save(trilha));
     }
+    @Transactional
+    @CacheEvict(value = "trilhas", allEntries = true)
+    public TrilhaProgressoResponseDTO atualizar(Integer id, TrilhaProgressoRequestDTO dto) {
+        TrilhaProgresso trilha = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Trilha não encontrada"));
+
+        Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
+
+        trilha.setTitulo(dto.getTitulo());
+        trilha.setCategoria(dto.getCategoria());
+        trilha.setUsuario(usuario);
+
+        return toResponse(repository.save(trilha));
+    }
     @Transactional(readOnly = true)
     public Page<TrilhaProgressoResponseDTO> listar(Pageable pageable) {
         return repository.findAll(pageable)
@@ -56,5 +71,14 @@ public class TrilhaProgressoService {
     public Page<TrilhaProgressoResponseDTO> listarPorUsuario(Integer usuarioId, Pageable pageable) {
         return repository.findByUsuarioId(usuarioId, pageable)
                 .map(this::toResponse);
+    }
+
+    @Transactional
+    @CacheEvict(value = "trilhas", allEntries = true)
+    public void deletar(Integer id) {
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException("Trilha não encontrada");
+        }
+        repository.deleteById(id);
     }
 }

@@ -30,5 +30,17 @@ public class CursoController {
     public ResponseEntity<CursoResponseDTO> criar(@Valid @RequestBody CursoRequestDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.criar(dto));
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CursoResponseDTO> atualizar(@PathVariable Integer id,
+                                                      @Valid @RequestBody CursoRequestDTO dto) {
+        return ResponseEntity.ok(service.atualizar(id, dto));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletar(@PathVariable Integer id) {
+        service.deletar(id);
+        return ResponseEntity.noContent().build();
+    }
 }
 
