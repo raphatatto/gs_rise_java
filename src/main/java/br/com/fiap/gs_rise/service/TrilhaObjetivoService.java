@@ -59,6 +59,21 @@ public class TrilhaObjetivoService {
 
         return toResponse(salvo);
     }
+    @Transactional
+    public TrilhaObjetivoResponseDTO atualizar(Integer id, TrilhaObjetivoRequestDTO dto) {
+        var objetivo = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Objetivo não encontrado"));
+
+        var trilha = trilhaRepository.findById(dto.getTrilhaId())
+                .orElseThrow(() -> new ResourceNotFoundException("Trilha não encontrada"));
+
+        objetivo.setTitulo(dto.getTitulo());
+        objetivo.setCategoria(dto.getCategoria());
+        objetivo.setConcluido(dto.getConcluido());
+        objetivo.setTrilha(trilha);
+
+        return toResponse(repository.save(objetivo));
+    }
     @Transactional(readOnly = true)
     public Page<TrilhaObjetivoResponseDTO> listar(Pageable pageable) {
         return repository.findAll(pageable)
@@ -69,6 +84,14 @@ public class TrilhaObjetivoService {
     public Page<TrilhaObjetivoResponseDTO> listarPorTrilha(Integer trilhaId, Pageable pageable) {
         return repository.findByTrilhaId(trilhaId, pageable)
                 .map(this::toResponse);
+    }
+
+    @Transactional
+    public void deletar(Integer id) {
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException("Objetivo não encontrado");
+        }
+        repository.deleteById(id);
     }
 
 }

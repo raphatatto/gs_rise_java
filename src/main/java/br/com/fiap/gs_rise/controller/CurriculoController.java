@@ -29,6 +29,18 @@ public class CurriculoController {
     public ResponseEntity<CurriculoResponseDTO> criar(@Valid @RequestBody CurriculoRequestDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.criar(dto));
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CurriculoResponseDTO> atualizar(@PathVariable Integer id,
+                                                          @Valid @RequestBody CurriculoRequestDTO dto) {
+        return ResponseEntity.ok(service.atualizar(id, dto));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletar(@PathVariable Integer id) {
+        service.deletar(id);
+        return ResponseEntity.noContent().build();
+    }
     @GetMapping
     public ResponseEntity<Page<CurriculoResponseDTO>> listar(@ParameterObject Pageable pageable) {
         pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
