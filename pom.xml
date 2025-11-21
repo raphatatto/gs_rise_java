@@ -91,11 +91,10 @@
             <version>${flyway.version}</version>
         </dependency>
 
-        <!-- Driver JDBC SQL Server -->
         <dependency>
-            <groupId>com.microsoft.sqlserver</groupId>
-            <artifactId>mssql-jdbc</artifactId>
-            <version>13.2.1.jre11</version>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.8.14</version>
         </dependency>
 
         <dependency>
