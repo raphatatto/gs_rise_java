@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Bem-estar</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: #f8fafc; }
+        .card { border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+    </style>
+</head>
+<body>
+<div th:replace="fragments/navbar :: navbar('bemestar')"></div>
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h2 class="mb-0">Bem-estar</h2>
+            <p class="text-muted">Registre humor, horas de estudo e hábitos para acompanhar a saúde da jornada.</p>
+        </div>
+        <a class="btn btn-primary" th:href="@{/app/bemestar/novo}">+ Novo registro</a>
+    </div>
+
+    <div th:if="${mensagemSucesso}" class="alert alert-success" th:text="${mensagemSucesso}"></div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Nível de humor</th>
+                        <th>Horas de estudo</th>
+                        <th>Atividade</th>
+                        <th>Usuário</th>
+                        <th class="text-end">Ações</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="registro : ${registros}">
+                        <td th:text="${#temporals.format(registro.dataRegistro, 'dd/MM/yyyy HH:mm')} ?: '-'" class="small"></td>
+                        <td th:text="${registro.nivelHumor} ?: '-'" class="small"></td>
+                        <td th:text="${registro.horasEstudo} ?: '-'" class="small"></td>
+                        <td th:text="${registro.descricaoAtividade} ?: '-'" class="small"></td>
+                        <td th:text="${usuariosPorId[registro.usuarioId]} ?: 'N/A'"></td>
+                        <td class="text-end">
+                            <div class="btn-group">
+                                <a class="btn btn-sm btn-outline-primary" th:href="@{'/app/bemestar/' + ${registro.id} + '/editar'}">Editar</a>
+                                <form th:action="@{'/app/bemestar/' + ${registro.id} + '/excluir'}" method="post" onsubmit="return confirm('Deseja excluir este registro?');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Excluir</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr th:if="${registros == null or #lists.isEmpty(registros)}">
+                        <td colspan="6" class="text-center text-muted">Nenhum registro de bem-estar ainda.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

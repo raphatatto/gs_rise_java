@@ -69,6 +69,13 @@ public class BemEstarService {
         return bemEstarRepository.findAll(pageable).map(this::toResponse);
     }
 
+    @Transactional(readOnly = true)
+    public BemEstarResponseDTO buscarPorId(Integer id) {
+        return bemEstarRepository.findById(id)
+                .map(this::toResponse)
+                .orElseThrow(() -> new ResourceNotFoundException("Registro de bem-estar não encontrado"));
+    }
+
     @Transactional
     public void deletar(Integer id) {
         bemEstarRepository.deleteById(id);

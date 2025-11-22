@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Trilhas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: #f8fafc; }
+        .card { border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+    </style>
+</head>
+<body>
+<div th:replace="fragments/navbar :: navbar('trilhas')"></div>
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h2 class="mb-0">Trilhas de progresso</h2>
+            <p class="text-muted">Monitore jornadas personalizadas por usuário e categoria.</p>
+        </div>
+        <a class="btn btn-primary" th:href="@{/app/trilhas/novo}">+ Nova trilha</a>
+    </div>
+
+    <div th:if="${mensagemSucesso}" class="alert alert-success" th:text="${mensagemSucesso}"></div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                    <tr>
+                        <th>Título</th>
+                        <th>Categoria</th>
+                        <th>Usuário</th>
+                        <th class="text-end">Ações</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="trilha : ${trilhas}">
+                        <td th:text="${trilha.titulo}"></td>
+                        <td th:text="${trilha.categoria}"></td>
+                        <td th:text="${usuariosPorId[trilha.usuarioId]} ?: 'N/A'"></td>
+                        <td class="text-end">
+                            <div class="btn-group">
+                                <a class="btn btn-sm btn-outline-primary" th:href="@{'/app/trilhas/' + ${trilha.id} + '/editar'}">Editar</a>
+                                <form th:action="@{'/app/trilhas/' + ${trilha.id} + '/excluir'}" method="post" onsubmit="return confirm('Deseja excluir esta trilha?');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Excluir</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr th:if="${trilhas == null or #lists.isEmpty(trilhas)}">
+                        <td colspan="4" class="text-center text-muted">Nenhuma trilha cadastrada ainda.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
