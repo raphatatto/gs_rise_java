@@ -73,6 +73,13 @@ public class CursoService {
         return cursoRepository.findAll(pageable).map(this::toResponse);
     }
 
+    @Transactional(readOnly = true)
+    public CursoResponseDTO buscarPorId(Integer id) {
+        Curso curso = cursoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Curso não encontrado"));
+        return toResponse(curso);
+    }
+
     @Transactional
     @CacheEvict(value = "cursos", allEntries = true)
     public void deletar(Integer id) {
