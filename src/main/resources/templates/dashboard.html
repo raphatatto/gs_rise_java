@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rise - Painel</title>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}" href="/css/dashboard.css" />
+</head>
+<body>
+<header>
+    <div class="container">
+        <h1>Rise - Painel de APIs</h1>
+        <p>Consuma e teste todos os endpoints REST diretamente pelo navegador.</p>
+    </div>
+</header>
+
+<div class="container">
+    <div class="grid">
+        <section class="card" id="curriculos">
+            <div class="section-title">
+                <h2>Currículos</h2>
+                <div class="actions">
+                    <button id="loadCurriculos" type="button">Atualizar lista</button>
+                </div>
+            </div>
+            <form id="curriculoForm">
+                <div class="form-group">
+                    <label>Usuário ID</label>
+                    <input name="usuarioId" type="number" required />
+                </div>
+                <div class="form-group">
+                    <label>Título</label>
+                    <input name="titulo" required />
+                </div>
+                <div class="form-group">
+                    <label>Experiência Profissional</label>
+                    <textarea name="experienciaProfissional" rows="2"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Habilidades</label>
+                    <textarea name="habilidades" rows="2"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Formação</label>
+                    <textarea name="formacao" rows="2"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Projetos</label>
+                    <input name="projetos" />
+                </div>
+                <div class="form-group">
+                    <label>Links</label>
+                    <input name="links" />
+                </div>
+                <button type="submit">Criar currículo</button>
+            </form>
+
+            <form id="curriculoUpdateForm">
+                <div class="form-group">
+                    <label>ID do currículo</label>
+                    <input name="curriculoId" type="number" required />
+                </div>
+                <div class="form-group">
+                    <label>Usuário ID</label>
+                    <input name="usuarioId" type="number" required />
+                </div>
+                <div class="form-group">
+                    <label>Título</label>
+                    <input name="titulo" required />
+                </div>
+                <div class="form-group">
+                    <label>Experiência Profissional</label>
+                    <textarea name="experienciaProfissional" rows="2"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Habilidades</label>
+                    <textarea name="habilidades" rows="2"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Formação</label>
+                    <textarea name="formacao" rows="2"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Projetos</label>
+                    <input name="projetos" />
+                </div>
+                <div class="form-group">
+                    <label>Links</label>
+                    <input name="links" />
+                </div>
+                <button type="submit">Atualizar currículo</button>
+            </form>
+
+            <form id="curriculoDelete">
+                <div class="form-group">
+                    <label>ID para remover</label>
+                    <input name="curriculoDeleteId" type="number" required />
+                </div>
+                <button type="submit">Excluir currículo</button>
+            </form>
+
+            <div id="curriculoStatus" class="status"></div>
+            <div class="table-wrapper" id="curriculosTable"></div>
+        </section>
+
+        <section class="card" id="cursos">
+            <div class="section-title">
+                <h2>Cursos</h2>
+                <div class="actions">
+                    <button id="loadCursos" type="button">Atualizar lista</button>
+                </div>
+            </div>
+            <form id="cursoForm">
+                <div class="form-group">
+                    <label>Usuário ID</label>
+                    <input name="usuarioId" type="number" required />
+                </div>
+                <div class="form-group">
+                    <label>Nome</label>
+                    <input name="nome" required />
+                </div>
+                <div class="form-group">
+                    <label>Descrição</label>
+                    <textarea name="descricao" rows="2"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Link</label>
+                    <input name="link" />
+                </div>
+                <div class="form-group">
+                    <label>Área</label>
+                    <input name="area" />
+                </div>
+                <button type="submit">Criar curso</button>
+            </form>
+
+            <form id="cursoUpdateForm">
+                <div class="form-group">
+                    <label>ID do curso</label>
+                    <input name="cursoId" type="number" required />
+                </div>
+                <div class="form-group">
+                    <label>Usuário ID</label>
+                    <input name="usuarioId" type="number" required />
+                </div>
+                <div class="form-group">
+                    <label>Nome</label>
+                    <input name="nome" required />
+                </div>
+                <div class="form-group">
+                    <label>Descrição</label>
+                    <textarea name="descricao" rows="2"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Link</label>
+                    <input name="link" />
+                </div>
+                <div class="form-group">
+                    <label>Área</label>
+                    <input name="area" />
+                </div>
+                <button type="submit">Atualizar curso</button>
+            </form>
+
+            <form id="cursoDelete">
+                <div class="form-group">
+                    <label>ID para remover</label>
+                    <input name="cursoDeleteId" type="number" required />
+                </div>
+                <button type="submit">Excluir curso</button>
+            </form>
+
+            <div id="cursoStatus" class="status"></div>
+            <div class="table-wrapper" id="cursosTable"></div>
+        </section>
+
+        <section class="card" id="bemEstar">
+            <div class="section-title">
+                <h2>Bem-estar</h2>
+                <div class="actions">
+                    <button id="loadBemEstar" type="button">Atualizar lista</button>
+                </div>
+            </div>
+            <form id="bemEstarForm">
+                <div class="form-group">
+                    <label>Usuário ID</label>
+                    <input name="usuarioId" type="number" required />
+                </div>
+                <div class="form-group">
+                    <label>Data do registro</label>
+                    <input name="dataRegistro" type="datetime-local" />
+                    <small class="helper">Deixe vazio para usar a data atual.</small>
+                </div>
+                <div class="form-group">
+                    <label>Nível de humor (0-10)</label>
+                    <input name="nivelHumor" type="number" min="0" max="10" />
+                </div>
+                <div class="form-group">
+                    <label>Horas de estudo</label>
+                    <input name="horasEstudo" type="datetime-local" />
+                    <small class="helper">Use o horário para representar a duração.</small>
+                </div>
+                <div class="form-group">
+                    <label>Descrição da atividade</label>
+                    <textarea name="descricaoAtividade" rows="2"></textarea>
+                </div>
+                <button type="submit">Criar registro</button>
+            </form>
+
+            <form id="bemEstarUpdateForm">
+                <div class="form-group">
+                    <label>ID do registro</label>
+                    <input name="bemEstarId" type="number" required />
+                </div>
+                <div class="form-group">
+                    <label>Usuário ID</label>
+                    <input name="usuarioId" type="number" required />
+                </div>
+                <div class="form-group">
+                    <label>Data do registro</label>
+                    <input name="dataRegistro" type="datetime-local" />
+                </div>
+                <div class="form-group">
+                    <label>Nível de humor (0-10)</label>
+                    <input name="nivelHumor" type="number" min="0" max="10" />
+                </div>
+                <div class="form-group">
+                    <label>Horas de estudo</label>
+                    <input name="horasEstudo" type="datetime-local" />
+                </div>
+                <div class="form-group">
+                    <label>Descrição da atividade</label>
+                    <textarea name="descricaoAtividade" rows="2"></textarea>
+                </div>
+                <button type="submit">Atualizar registro</button>
+            </form>
+
+            <form id="bemEstarDelete">
+                <div class="form-group">
+                    <label>ID para remover</label>
+                    <input name="bemEstarDeleteId" type="number" required />
+                </div>
+                <button type="submit">Excluir registro</button>
+            </form>
+
+            <div id="bemEstarStatus" class="status"></div>
+            <div class="table-wrapper" id="bemEstarTable"></div>
+        </section>
+
+        <section class="card" id="trilhas">
+            <div class="section-title">
+                <h2>Trilhas de Progresso</h2>
+                <div class="actions">
+                    <button id="loadTrilhas" type="button">Atualizar lista</button>
+                </div>
+            </div>
+            <form id="trilhaForm">
+                <div class="form-group">
+                    <label>Usuário ID</label>
+                    <input name="usuarioId" type="number" required />
+                </div>
+                <div class="form-group">
+                    <label>Título</label>
+                    <input name="titulo" required />
+                </div>
+                <div class="form-group">
+                    <label>Categoria</label>
+                    <input name="categoria" required />
+                </div>
+                <button type="submit">Criar trilha</button>
+            </form>
+
+            <form id="trilhaUpdateForm">
+                <div class="form-group">
+                    <label>ID da trilha</label>
+                    <input name="trilhaId" type="number" required />
+                </div>
+                <div class="form-group">
+                    <label>Usuário ID</label>
+                    <input name="usuarioId" type="number" required />
+                </div>
+                <div class="form-group">
+                    <label>Título</label>
+                    <input name="titulo" required />
+                </div>
+                <div class="form-group">
+                    <label>Categoria</label>
+                    <input name="categoria" required />
+                </div>
+                <button type="submit">Atualizar trilha</button>
+            </form>
+
+            <form id="trilhaDelete">
+                <div class="form-group">
+                    <label>ID para remover</label>
+                    <input name="trilhaDeleteId" type="number" required />
+                </div>
+                <button type="submit">Excluir trilha</button>
+            </form>
+
+            <div id="trilhaStatus" class="status"></div>
+            <div class="table-wrapper" id="trilhasTable"></div>
+        </section>
+
+        <section class="card" id="objetivos">
+            <div class="section-title">
+                <h2>Objetivos da Trilha</h2>
+                <div class="actions">
+                    <button id="loadObjetivos" type="button">Atualizar lista</button>
+                </div>
+            </div>
+            <form id="objetivoForm">
+                <div class="form-group">
+                    <label>ID da trilha</label>
+                    <input name="trilhaId" type="number" required />
+                </div>
+                <div class="form-group">
+                    <label>Título</label>
+                    <input name="titulo" required />
+                </div>
+                <div class="form-group">
+                    <label>Categoria</label>
+                    <input name="categoria" />
+                </div>
+                <div class="form-group">
+                    <label>Concluído</label>
+                    <select name="concluido">
+                        <option value="N">Não</option>
+                        <option value="S">Sim</option>
+                    </select>
+                </div>
+                <button type="submit">Criar objetivo</button>
+            </form>
+
+            <form id="objetivoUpdateForm">
+                <div class="form-group">
+                    <label>ID do objetivo</label>
+                    <input name="objetivoId" type="number" required />
+                </div>
+                <div class="form-group">
+                    <label>ID da trilha</label>
+                    <input name="trilhaId" type="number" required />
+                </div>
+                <div class="form-group">
+                    <label>Título</label>
+                    <input name="titulo" required />
+                </div>
+                <div class="form-group">
+                    <label>Categoria</label>
+                    <input name="categoria" />
+                </div>
+                <div class="form-group">
+                    <label>Concluído</label>
+                    <select name="concluido">
+                        <option value="N">Não</option>
+                        <option value="S">Sim</option>
+                    </select>
+                </div>
+                <button type="submit">Atualizar objetivo</button>
+            </form>
+
+            <form id="objetivoDelete">
+                <div class="form-group">
+                    <label>ID para remover</label>
+                    <input name="objetivoDeleteId" type="number" required />
+                </div>
+                <button type="submit">Excluir objetivo</button>
+            </form>
+
+            <div id="objetivoStatus" class="status"></div>
+            <div class="table-wrapper" id="objetivosTable"></div>
+        </section>
+    </div>
+</div>
+
+<script th:src="@{/js/dashboard.js}" src="/js/dashboard.js"></script>
+</body>
+</html>

@@ -31,6 +31,12 @@ public class BemEstarController {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.criar(dto));
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<BemEstarResponseDTO> atualizar(@PathVariable Integer id,
+                                                         @Valid @RequestBody BemEstarRequestDTO dto) {
+        return ResponseEntity.ok(service.atualizar(id, dto));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Integer id) {
         service.deletar(id);

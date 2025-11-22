@@ -47,6 +47,23 @@ public class BemEstarService {
         return toResponse(bemEstarRepository.save(registro));
     }
 
+    @Transactional
+    public BemEstarResponseDTO atualizar(Integer id, BemEstarRequestDTO dto) {
+        BemEstar registro = bemEstarRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Registro de bem-estar não encontrado"));
+
+        Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
+
+        registro.setDataRegistro(dto.getDataRegistro());
+        registro.setNivelHumor(dto.getNivelHumor());
+        registro.setHorasEstudo(dto.getHorasEstudo());
+        registro.setDescricaoAtividade(dto.getDescricaoAtividade());
+        registro.setUsuario(usuario);
+
+        return toResponse(bemEstarRepository.save(registro));
+    }
+
     @Transactional(readOnly = true)
     public Page<BemEstarResponseDTO> listar(Pageable pageable) {
         return bemEstarRepository.findAll(pageable).map(this::toResponse);
