@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Currículos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: #f8fafc; }
+        .card { border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+    </style>
+</head>
+<body>
+<div th:replace="fragments/navbar :: navbar('curriculos')"></div>
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h2 class="mb-0">Currículos</h2>
+            <p class="text-muted">Centralize o perfil de cada usuário e mantenha os dados sempre atualizados.</p>
+        </div>
+        <a class="btn btn-primary" th:href="@{/app/curriculos/novo}">+ Novo currículo</a>
+    </div>
+
+    <div th:if="${mensagemSucesso}" class="alert alert-success" th:text="${mensagemSucesso}"></div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                    <tr>
+                        <th>Título</th>
+                        <th>Usuário</th>
+                        <th>Formação</th>
+                        <th>Habilidades</th>
+                        <th>Projetos</th>
+                        <th>Links</th>
+                        <th class="text-end">Ações</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="curriculo : ${curriculos}">
+                        <td th:text="${curriculo.titulo}"></td>
+                        <td th:text="${usuariosPorId[curriculo.usuarioId]} ?: 'N/A'"></td>
+                        <td th:text="${curriculo.formacao} ?: '-'" class="small"></td>
+                        <td th:text="${curriculo.habilidades} ?: '-'" class="small"></td>
+                        <td th:text="${curriculo.projetos} ?: '-'" class="small"></td>
+                        <td>
+                            <a th:if="${curriculo.links}" th:href="${curriculo.links}" target="_blank" class="link-primary">Abrir</a>
+                            <span th:if="${curriculo.links == null || curriculo.links.isBlank()}">-</span>
+                        </td>
+                        <td class="text-end">
+                            <div class="btn-group">
+                                <a class="btn btn-sm btn-outline-primary" th:href="@{'/app/curriculos/' + ${curriculo.id} + '/editar'}">Editar</a>
+                                <form th:action="@{'/app/curriculos/' + ${curriculo.id} + '/excluir'}" method="post" onsubmit="return confirm('Deseja excluir este currículo?');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Excluir</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr th:if="${curriculos == null or #lists.isEmpty(curriculos)}">
+                        <td colspan="7" class="text-center text-muted">Nenhum currículo cadastrado ainda.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

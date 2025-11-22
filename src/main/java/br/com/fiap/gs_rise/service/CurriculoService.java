@@ -31,6 +31,7 @@ public class CurriculoService {
                 .habilidades(curriculo.getHabilidades())
                 .projetos(curriculo.getProjetos())
                 .links(curriculo.getLinks())
+                .experienciaProfissional(curriculo.getExperienciaProfissional())
                 .build();
     }
 
@@ -75,6 +76,13 @@ public class CurriculoService {
     @Transactional(readOnly = true)
     public CurriculoResponseDTO buscarPorUsuario(Integer idUsuario) {
         return repository.findByUsuarioId(idUsuario)
+                .map(this::toResponse)
+                .orElseThrow(() -> new ResourceNotFoundException("Currículo não encontrado"));
+    }
+
+    @Transactional(readOnly = true)
+    public CurriculoResponseDTO buscarPorId(Integer id) {
+        return repository.findById(id)
                 .map(this::toResponse)
                 .orElseThrow(() -> new ResourceNotFoundException("Currículo não encontrado"));
     }

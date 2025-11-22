@@ -13,4 +13,5 @@ public class CurriculoResponseDTO {
     private String habilidades;
     private String projetos;
     private String links;
+    private String experienciaProfissional;
 }

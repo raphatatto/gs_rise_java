@@ -67,6 +67,13 @@ public class TrilhaProgressoService {
     }
 
     @Transactional(readOnly = true)
+    public TrilhaProgressoResponseDTO buscarPorId(Integer id) {
+        return repository.findById(id)
+                .map(this::toResponse)
+                .orElseThrow(() -> new ResourceNotFoundException("Trilha não encontrada"));
+    }
+
+    @Transactional(readOnly = true)
     @Cacheable(value = "trilhas", key = "#usuarioId + '-' + #pageable.pageNumber + '-' + #pageable.pageSize")
     public Page<TrilhaProgressoResponseDTO> listarPorUsuario(Integer usuarioId, Pageable pageable) {
         return repository.findByUsuarioId(usuarioId, pageable)
