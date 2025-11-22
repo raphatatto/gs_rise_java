@@ -11,18 +11,9 @@
     </style>
 </head>
 <body>
+<!-- Só o fragmento da navbar -->
 <div th:replace="fragments/navbar :: navbar('cursos')"></div>
-<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom mb-4">
-    <div class="container">
-        <a class="navbar-brand" href="#">Rise</a>
-        <div class="d-flex align-items-center gap-3">
-            <div class="text-muted" th:text="${#authentication?.name}"></div>
-            <form th:action="@{/logout}" method="post">
-                <button class="btn btn-outline-danger btn-sm" type="submit">Sair</button>
-            </form>
-        </div>
-    </div>
-</nav>
+
 <div class="container">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div>
@@ -58,8 +49,11 @@
                         </td>
                         <td class="text-end">
                             <div class="btn-group">
-                                <a class="btn btn-sm btn-outline-primary" th:href="@{'/app/cursos/' + ${curso.id} + '/editar'}">Editar</a>
-                                <form th:action="@{'/app/cursos/' + ${curso.id} + '/excluir'}" method="post" onsubmit="return confirm('Deseja excluir este curso?');">
+                                <a class="btn btn-sm btn-outline-primary"
+                                   th:href="@{'/app/cursos/' + ${curso.id} + '/editar'}">Editar</a>
+                                <form th:action="@{'/app/cursos/' + ${curso.id} + '/excluir'}"
+                                      method="post"
+                                      onsubmit="return confirm('Deseja excluir este curso?');">
                                     <button type="submit" class="btn btn-sm btn-outline-danger">Excluir</button>
                                 </form>
                             </div>
