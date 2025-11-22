@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>RISE | Painel</title>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+<body>
+<div class="header">
+    <h1>RISE • Painel das APIs</h1>
+    <p>Use os formulários abaixo para popular rapidamente as entidades expostas pelas APIs REST já existentes.</p>
+</div>
+<div class="container">
+    <div th:if="${param.created}" class="alert">
+        <span>✅</span>
+        <span th:text="'Novo registro de ' + ${param.created} + ' criado com sucesso.'"></span>
+    </div>
+
+    <div class="grid cols-3">
+        <div class="card">
+            <div class="section-title">
+                <h2>Usuários</h2>
+                <span class="chip" th:text="${usuariosTotal} + ' cadastrados'">0 cadastrados</span>
+            </div>
+            <table class="table" th:if="${usuarios != null && !usuarios.isEmpty()}">
+                <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>E-mail</th>
+                    <th>Tipo</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="usuario : ${usuarios}">
+                    <td th:text="${usuario.nome}"></td>
+                    <td th:text="${usuario.email}"></td>
+                    <td th:text="${usuario.tipo}">-</td>
+                </tr>
+                </tbody>
+            </table>
+            <p class="muted" th:if="${usuarios == null || usuarios.isEmpty()}">Nenhum usuário cadastrado ainda.</p>
+        </div>
+
+        <div class="card">
+            <div class="section-title">
+                <h2>Cursos</h2>
+                <span class="chip" th:text="${cursosTotal} + ' disponíveis'">0 disponíveis</span>
+            </div>
+            <table class="table" th:if="${cursos != null && !cursos.isEmpty()}">
+                <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Área</th>
+                    <th>Usuário</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="curso : ${cursos}">
+                    <td th:text="${curso.nome}"></td>
+                    <td th:text="${curso.area}">-</td>
+                    <td th:text="${curso.usuarioId}"></td>
+                </tr>
+                </tbody>
+            </table>
+            <p class="muted" th:if="${cursos == null || cursos.isEmpty()}">Cadastre um curso para vinculá-lo a um usuário.</p>
+        </div>
+
+        <div class="card">
+            <div class="section-title">
+                <h2>Trilhas</h2>
+                <span class="chip" th:text="${trilhasTotal} + ' em progresso'">0 em progresso</span>
+            </div>
+            <table class="table" th:if="${trilhas != null && !trilhas.isEmpty()}">
+                <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Categoria</th>
+                    <th>Usuário</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="trilha : ${trilhas}">
+                    <td th:text="${trilha.titulo}"></td>
+                    <td th:text="${trilha.categoria}"></td>
+                    <td th:text="${trilha.usuarioId}"></td>
+                </tr>
+                </tbody>
+            </table>
+            <p class="muted" th:if="${trilhas == null || trilhas.isEmpty()}">Nenhuma trilha em andamento.</p>
+        </div>
+    </div>
+
+    <div class="grid cols-2" style="margin-top: 18px;">
+        <div class="card">
+            <div class="section-title">
+                <h2>Novo usuário</h2>
+                <span class="chip">/api/v1/usuarios</span>
+            </div>
+            <form th:action="@{/app/usuarios}" th:object="${usuarioForm}" method="post">
+                <div class="form-grid">
+                    <div>
+                        <label>Nome</label>
+                        <input th:field="*{nome}" placeholder="Maria Silva" required>
+                        <p class="error" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></p>
+                    </div>
+                    <div>
+                        <label>E-mail</label>
+                        <input th:field="*{email}" type="email" placeholder="contato@email.com" required>
+                        <p class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+                    </div>
+                    <div>
+                        <label>Senha</label>
+                        <input th:field="*{senha}" type="password" placeholder="••••••" required>
+                        <p class="error" th:if="${#fields.hasErrors('senha')}" th:errors="*{senha}"></p>
+                    </div>
+                    <div>
+                        <label>Tipo</label>
+                        <input th:field="*{tipo}" placeholder="Aluno, mentor...">
+                    </div>
+                    <div>
+                        <label>Telefone</label>
+                        <input th:field="*{telefone}" placeholder="(11) 99999-9999">
+                    </div>
+                    <div>
+                        <label>Habilidades</label>
+                        <input th:field="*{habilidades}" placeholder="Java, Spring, SQL">
+                    </div>
+                </div>
+                <div class="form-grid full">
+                    <div>
+                        <label>Descrição</label>
+                        <textarea th:field="*{descricao}" placeholder="Apresente o profissional"></textarea>
+                    </div>
+                </div>
+                <button type="submit">Adicionar usuário</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <div class="section-title">
+                <h2>Novo curso</h2>
+                <span class="chip">/api/v1/cursos</span>
+            </div>
+            <form th:action="@{/app/cursos}" th:object="${cursoForm}" method="post">
+                <div class="form-grid">
+                    <div>
+                        <label>Nome</label>
+                        <input th:field="*{nome}" placeholder="Spring Boot do zero" required>
+                        <p class="error" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></p>
+                    </div>
+                    <div>
+                        <label>Área</label>
+                        <input th:field="*{area}" placeholder="Back-end">
+                    </div>
+                    <div>
+                        <label>Descrição</label>
+                        <input th:field="*{descricao}" placeholder="Aprenda a criar APIs REST">
+                    </div>
+                    <div>
+                        <label>Link</label>
+                        <input th:field="*{link}" placeholder="https://exemplo.com/curso">
+                    </div>
+                    <div>
+                        <label>Usuário</label>
+                        <select th:field="*{usuarioId}" required>
+                            <option value="" disabled selected>Selecione</option>
+                            <option th:each="usuario : ${usuarios}" th:value="${usuario.id}" th:text="${usuario.nome}"></option>
+                        </select>
+                        <p class="helper-text">Cadastre o usuário antes de vincular o curso.</p>
+                        <p class="error" th:if="${#fields.hasErrors('usuarioId')}" th:errors="*{usuarioId}"></p>
+                    </div>
+                </div>
+                <button type="submit">Publicar curso</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="grid cols-2" style="margin-top: 18px;">
+        <div class="card">
+            <div class="section-title">
+                <h2>Novo currículo</h2>
+                <span class="chip">/api/v1/curriculos</span>
+            </div>
+            <form th:action="@{/app/curriculos}" th:object="${curriculoForm}" method="post">
+                <div class="form-grid">
+                    <div>
+                        <label>Título</label>
+                        <input th:field="*{titulo}" placeholder="Dev Java Senior" required>
+                        <p class="error" th:if="${#fields.hasErrors('titulo')}" th:errors="*{titulo}"></p>
+                    </div>
+                    <div>
+                        <label>Usuário</label>
+                        <select th:field="*{usuarioId}" required>
+                            <option value="" disabled selected>Selecione</option>
+                            <option th:each="usuario : ${usuarios}" th:value="${usuario.id}" th:text="${usuario.nome}"></option>
+                        </select>
+                        <p class="error" th:if="${#fields.hasErrors('usuarioId')}" th:errors="*{usuarioId}"></p>
+                    </div>
+                    <div>
+                        <label>Experiência profissional</label>
+                        <input th:field="*{experienciaProfissional}" placeholder="5 anos com microserviços">
+                    </div>
+                    <div>
+                        <label>Habilidades</label>
+                        <input th:field="*{habilidades}" placeholder="Java, Docker, Azure">
+                    </div>
+                    <div>
+                        <label>Formação</label>
+                        <input th:field="*{formacao}" placeholder="Sistemas de Informação">
+                    </div>
+                    <div>
+                        <label>Projetos</label>
+                        <input th:field="*{projetos}" placeholder="RISE, E-commerce...">
+                    </div>
+                </div>
+                <div class="form-grid full">
+                    <div>
+                        <label>Links</label>
+                        <input th:field="*{links}" placeholder="LinkedIn, GitHub">
+                    </div>
+                </div>
+                <button type="submit">Salvar currículo</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <div class="section-title">
+                <h2>Nova trilha</h2>
+                <span class="chip">/api/v1/trilhas-progresso</span>
+            </div>
+            <form th:action="@{/app/trilhas}" th:object="${trilhaForm}" method="post">
+                <div class="form-grid">
+                    <div>
+                        <label>Título</label>
+                        <input th:field="*{titulo}" placeholder="Back-end avançado" required>
+                        <p class="error" th:if="${#fields.hasErrors('titulo')}" th:errors="*{titulo}"></p>
+                    </div>
+                    <div>
+                        <label>Categoria</label>
+                        <input th:field="*{categoria}" placeholder="API, IA..." required>
+                        <p class="error" th:if="${#fields.hasErrors('categoria')}" th:errors="*{categoria}"></p>
+                    </div>
+                    <div>
+                        <label>Usuário</label>
+                        <select th:field="*{usuarioId}" required>
+                            <option value="" disabled selected>Selecione</option>
+                            <option th:each="usuario : ${usuarios}" th:value="${usuario.id}" th:text="${usuario.nome}"></option>
+                        </select>
+                        <p class="error" th:if="${#fields.hasErrors('usuarioId')}" th:errors="*{usuarioId}"></p>
+                    </div>
+                </div>
+                <button type="submit">Criar trilha</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="grid cols-2" style="margin-top: 18px;">
+        <div class="card">
+            <div class="section-title">
+                <h2>Novo objetivo</h2>
+                <span class="chip">/api/v1/trilhas-objetivos</span>
+            </div>
+            <form th:action="@{/app/objetivos}" th:object="${objetivoForm}" method="post">
+                <div class="form-grid">
+                    <div>
+                        <label>Título</label>
+                        <input th:field="*{titulo}" placeholder="Concluir módulo de segurança" required>
+                        <p class="error" th:if="${#fields.hasErrors('titulo')}" th:errors="*{titulo}"></p>
+                    </div>
+                    <div>
+                        <label>Categoria</label>
+                        <input th:field="*{categoria}" placeholder="Boas práticas">
+                    </div>
+                    <div>
+                        <label>Trilha</label>
+                        <select th:field="*{trilhaId}" required>
+                            <option value="" disabled selected>Selecione</option>
+                            <option th:each="trilha : ${trilhas}" th:value="${trilha.id}" th:text="${trilha.titulo}"></option>
+                        </select>
+                        <p class="error" th:if="${#fields.hasErrors('trilhaId')}" th:errors="*{trilhaId}"></p>
+                    </div>
+                    <div>
+                        <label>Concluído (S/N)</label>
+                        <input th:field="*{concluido}" placeholder="N" maxlength="1">
+                    </div>
+                </div>
+                <button type="submit">Registrar objetivo</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <div class="section-title">
+                <h2>Bem-estar</h2>
+                <span class="chip">/api/v1/bemestar</span>
+            </div>
+            <form th:action="@{/app/bemestar}" th:object="${bemEstarForm}" method="post">
+                <div class="form-grid">
+                    <div>
+                        <label>Usuário</label>
+                        <select th:field="*{usuarioId}" required>
+                            <option value="" disabled selected>Selecione</option>
+                            <option th:each="usuario : ${usuarios}" th:value="${usuario.id}" th:text="${usuario.nome}"></option>
+                        </select>
+                        <p class="error" th:if="${#fields.hasErrors('usuarioId')}" th:errors="*{usuarioId}"></p>
+                    </div>
+                    <div>
+                        <label>Data do registro</label>
+                        <input th:field="*{dataRegistro}" type="datetime-local">
+                    </div>
+                    <div>
+                        <label>Nível de humor</label>
+                        <input th:field="*{nivelHumor}" type="number" min="1" max="10" placeholder="5">
+                    </div>
+                    <div>
+                        <label>Horas de estudo (HH:MM)</label>
+                        <input th:field="*{horasEstudo}" type="datetime-local">
+                        <p class="helper-text">Use o mesmo dia para registrar a duração.</p>
+                    </div>
+                    <div class="form-grid full">
+                        <label>Descrição da atividade</label>
+                        <textarea th:field="*{descricaoAtividade}" placeholder="Resumo do dia"></textarea>
+                    </div>
+                </div>
+                <button type="submit">Salvar bem-estar</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top: 18px;">
+        <div class="section-title">
+            <h2>Objetivos criados</h2>
+            <span class="chip" th:text="${objetivosTotal} + ' itens'">0 itens</span>
+        </div>
+        <table class="table" th:if="${objetivos != null && !objetivos.isEmpty()}">
+            <thead>
+            <tr>
+                <th>Título</th>
+                <th>Categoria</th>
+                <th>Trilha</th>
+                <th>Concluído</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="objetivo : ${objetivos}">
+                <td th:text="${objetivo.titulo}"></td>
+                <td th:text="${objetivo.categoria}"></td>
+                <td th:text="${objetivo.trilhaId}"></td>
+                <td th:text="${objetivo.concluido}"></td>
+            </tr>
+            </tbody>
+        </table>
+        <p class="muted" th:if="${objetivos == null || objetivos.isEmpty()}">Nenhum objetivo cadastrado.</p>
+    </div>
+</div>
+</body>
+</html>
