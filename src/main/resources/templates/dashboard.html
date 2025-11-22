@@ -16,6 +16,59 @@
         <span th:text="'Novo registro de ' + ${param.created} + ' criado com sucesso.'"></span>
     </div>
 
+    <div class="grid cols-2" style="margin-top: 10px;">
+        <div class="card">
+            <div class="section-title">
+                <h2>Autenticação para exclusão</h2>
+                <span class="chip">DELETE protegido</span>
+            </div>
+            <p class="muted">Informe o e-mail e a senha de um usuário válido antes de remover qualquer registro.</p>
+            <form id="admin-login-form" class="form-grid">
+                <div>
+                    <label>E-mail</label>
+                    <input id="admin-email" type="email" placeholder="seu@email.com" required>
+                </div>
+                <div>
+                    <label>Senha</label>
+                    <input id="admin-password" type="password" placeholder="••••••" required>
+                </div>
+                <div class="form-grid full">
+                    <button type="submit">Salvar login para exclusões</button>
+                    <p id="auth-status" class="helper-text">Nenhuma sessão autenticada para deletar.</p>
+                </div>
+            </form>
+        </div>
+        <div class="card">
+            <div class="section-title">
+                <h2>Sugestões com IA</h2>
+                <span class="chip">/api/v1/ia/sugestoes-trilha</span>
+            </div>
+            <p class="muted">Peça ideias de trilhas personalizadas para o seu objetivo.</p>
+            <form id="ia-form" class="form-grid">
+                <div>
+                    <label>Nome do usuário</label>
+                    <input name="nome" placeholder="Maria Silva" required>
+                </div>
+                <div>
+                    <label>Objetivo principal</label>
+                    <input name="objetivo" placeholder="Migrar para back-end" required>
+                </div>
+                <div>
+                    <label>Interesses (opcional)</label>
+                    <input name="interesses" placeholder="Cloud, APIs, DevOps">
+                </div>
+                <div>
+                    <label>Contexto atual (opcional)</label>
+                    <input name="contexto" placeholder="Estágio em suporte, 3º semestre">
+                </div>
+                <div class="form-grid full">
+                    <button type="submit">Pedir sugestão</button>
+                </div>
+            </form>
+            <div id="ia-output" class="ai-output muted">A resposta da IA aparecerá aqui.</div>
+        </div>
+    </div>
+
     <div class="grid cols-3">
         <div class="card">
             <div class="section-title">
@@ -28,6 +81,7 @@
                     <th>Nome</th>
                     <th>E-mail</th>
                     <th>Tipo</th>
+                    <th class="actions-col">Ações</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -35,6 +89,11 @@
                     <td th:text="${usuario.nome}"></td>
                     <td th:text="${usuario.email}"></td>
                     <td th:text="${usuario.tipo}">-</td>
+                    <td class="actions">
+                        <button type="button"
+                                class="secondary danger"
+                                th:attr="data-delete-endpoint=@{'/api/v1/usuarios/' + ${usuario.id}},data-entity='Usuário'">Deletar</button>
+                    </td>
                 </tr>
                 </tbody>
             </table>
@@ -52,6 +111,7 @@
                     <th>Nome</th>
                     <th>Área</th>
                     <th>Usuário</th>
+                    <th class="actions-col">Ações</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -59,6 +119,11 @@
                     <td th:text="${curso.nome}"></td>
                     <td th:text="${curso.area}">-</td>
                     <td th:text="${curso.usuarioId}"></td>
+                    <td class="actions">
+                        <button type="button"
+                                class="secondary danger"
+                                th:attr="data-delete-endpoint=@{'/api/v1/cursos/' + ${curso.id}},data-entity='Curso'">Deletar</button>
+                    </td>
                 </tr>
                 </tbody>
             </table>
@@ -76,6 +141,7 @@
                     <th>Título</th>
                     <th>Categoria</th>
                     <th>Usuário</th>
+                    <th class="actions-col">Ações</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -83,6 +149,11 @@
                     <td th:text="${trilha.titulo}"></td>
                     <td th:text="${trilha.categoria}"></td>
                     <td th:text="${trilha.usuarioId}"></td>
+                    <td class="actions">
+                        <button type="button"
+                                class="secondary danger"
+                                th:attr="data-delete-endpoint=@{'/api/v1/trilhas-progresso/' + ${trilha.id}},data-entity='Trilha'">Deletar</button>
+                    </td>
                 </tr>
                 </tbody>
             </table>
@@ -338,6 +409,7 @@
                 <th>Categoria</th>
                 <th>Trilha</th>
                 <th>Concluído</th>
+                <th class="actions-col">Ações</th>
             </tr>
             </thead>
             <tbody>
@@ -346,11 +418,131 @@
                 <td th:text="${objetivo.categoria}"></td>
                 <td th:text="${objetivo.trilhaId}"></td>
                 <td th:text="${objetivo.concluido}"></td>
+                <td class="actions">
+                    <button type="button"
+                            class="secondary danger"
+                            th:attr="data-delete-endpoint=@{'/api/v1/trilhas-objetivos/' + ${objetivo.id}},data-entity='Objetivo'">Deletar</button>
+                </td>
             </tr>
             </tbody>
         </table>
         <p class="muted" th:if="${objetivos == null || objetivos.isEmpty()}">Nenhum objetivo cadastrado.</p>
     </div>
 </div>
+<script>
+    (() => {
+        const loginForm = document.getElementById('admin-login-form');
+        const statusEl = document.getElementById('auth-status');
+        const iaForm = document.getElementById('ia-form');
+        const iaOutput = document.getElementById('ia-output');
+        let authHeader = null;
+
+        const setStatus = (text, ok = false) => {
+            if (!statusEl) return;
+            statusEl.textContent = text;
+            statusEl.classList.toggle('success', ok);
+        };
+
+        const ensureAuth = () => {
+            if (!authHeader) {
+                alert('Para deletar, faça o login informando e-mail e senha válidos.');
+                return false;
+            }
+            return true;
+        };
+
+        loginForm?.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const email = document.getElementById('admin-email')?.value?.trim();
+            const password = document.getElementById('admin-password')?.value ?? '';
+
+            if (!email || !password) {
+                setStatus('Preencha e-mail e senha para autenticar.');
+                return;
+            }
+
+            const token = btoa(`${email}:${password}`);
+            authHeader = `Basic ${token}`;
+            setStatus(`Sessão pronta para deletar com ${email}.`, true);
+        });
+
+        const deleteButtons = document.querySelectorAll('[data-delete-endpoint]');
+        deleteButtons.forEach((button) => {
+            button.addEventListener('click', async () => {
+                if (!ensureAuth()) return;
+                const endpoint = button.getAttribute('data-delete-endpoint');
+                const entity = button.getAttribute('data-entity') ?? 'Registro';
+
+                if (!endpoint) return;
+                const confirmed = confirm(`Tem certeza que deseja deletar este ${entity}?`);
+                if (!confirmed) return;
+
+                try {
+                    const response = await fetch(endpoint, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': authHeader,
+                        },
+                    });
+
+                    if (response.status === 401 || response.status === 403) {
+                        setStatus('Autenticação inválida. Refaça o login com e-mail e senha corretos.');
+                        return;
+                    }
+
+                    if (!response.ok) {
+                        alert(`Falha ao deletar ${entity}. Código: ${response.status}`);
+                        return;
+                    }
+
+                    const row = button.closest('tr');
+                    row?.remove();
+                    alert(`${entity} deletado com sucesso.`);
+                } catch (error) {
+                    console.error(error);
+                    alert('Não foi possível completar a exclusão. Verifique sua conexão.');
+                }
+            });
+        });
+
+        iaForm?.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const formData = new FormData(iaForm);
+            const payload = {
+                nomeUsuario: formData.get('nome'),
+                objetivoPrincipal: formData.get('objetivo'),
+                interesses: formData.get('interesses'),
+                contextoAtual: formData.get('contexto'),
+            };
+
+            iaOutput.textContent = 'Gerando sugestão com IA...';
+            iaOutput.classList.add('loading');
+
+            try {
+                const response = await fetch('/api/v1/ia/sugestoes-trilha', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload),
+                });
+
+                if (!response.ok) {
+                    iaOutput.textContent = 'Não foi possível gerar a sugestão agora.';
+                    iaOutput.classList.remove('loading');
+                    return;
+                }
+
+                const data = await response.json();
+                iaOutput.textContent = data.sugestaoGerada || 'IA retornou uma resposta vazia.';
+            } catch (error) {
+                console.error(error);
+                iaOutput.textContent = 'Erro ao conversar com a IA. Tente novamente mais tarde.';
+            } finally {
+                iaOutput.classList.remove('loading');
+            }
+        });
+    })();
+</script>
 </body>
 </html>
