@@ -48,18 +48,42 @@ public class SecurityConfig {
                                 "/swagger-ui.html"
                         ).permitAll()
 
+                        // 🔓 páginas públicas (login, cadastro e assets)
+                        .requestMatchers(
+                                "/login",
+                                "/register",
+                                "/css/**",
+                                "/js/**",
+                                "/images/**",
+                                "/webjars/**"
+                        ).permitAll()
+
                         // 🔓 Health se existir
                         .requestMatchers("/health").permitAll()
 
                         // 🔒 SOMENTE DELETE da API exige autenticação
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/**").authenticated()
 
+                        // 🔒 Área web protegida
+                        .requestMatchers("/app/**").authenticated()
+
                         // 🔓 TODO o resto (GET, POST, PUT etc.) é público
                         .anyRequest().permitAll()
                 )
-                // basic auth só será usado quando alguém chamar DELETE
+                // basic auth para chamadas de API DELETE
                 .httpBasic(Customizer.withDefaults())
-                .formLogin(form -> form.disable());
+                // formulário customizado para navegação web
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/app/cursos", true)
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout")
+                        .deleteCookies("JSESSIONID")
+                        .permitAll()
+                );
 
         return http.build();
     }
