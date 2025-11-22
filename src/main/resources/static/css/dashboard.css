@@ -199,6 +199,47 @@ button {
     margin-top: 4px;
 }
 
+.actions-col {
+    width: 110px;
+}
+
+.actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.secondary {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text);
+    box-shadow: none;
+    padding: 8px 12px;
+}
+
+.secondary.danger {
+    border-color: #f87171;
+    color: #fecdd3;
+    background: rgba(248, 113, 113, 0.08);
+}
+
+.ai-output {
+    margin-top: 10px;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px dashed var(--border);
+    min-height: 48px;
+    white-space: pre-wrap;
+}
+
+.ai-output.loading {
+    color: #c7d2fe;
+}
+
+.helper-text.success {
+    color: #bbf7d0;
+}
+
 .error {
     color: #fca5a5;
     font-size: 12px;
