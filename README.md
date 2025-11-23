@@ -68,7 +68,14 @@ Principais componentes:
 git clone <url-do-repositorio>
 cd gs_rise
 ```
-
+### Necessaario ter o Docker instalado e rodar esse comando para o RabbitMQ funcionar
+```bash
+docker run -d \
+  --name rabbitmq \
+  -p 5672:5672 \
+  -p 15672:15672 \
+  rabbitmq:3-management
+  ```
 ### 2️⃣ Configurar o banco de dados (`application.properties`)
 ```properties
 spring.datasource.url=jdbc:sqlserver://<server>.database.windows.net:1433;database=<nome-db>
