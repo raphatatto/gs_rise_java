@@ -95,7 +95,7 @@ spring.datasource.password=<senha>
 
 ---
 
-## 🧪 Testes Automatizados (Didático)
+## 🧪 Testes Automatizados 
 
 ### Como rodar:
 ```bash
