@@ -17,8 +17,7 @@ Este repositório contém toda a solução da API + aplicação web, incluindo d
 ## 📼 Links da Entrega
 - **Vídeo de apresentação:** https://youtu.be/4if-_zztZh4  
 - **Link da aplicação (Azure App Service):** https://rise-gs-java-app.azurewebsites.net/login
-- **Video Pitch** _insira aqui_
-
+- **Video Pitch** https://youtu.be/8JXJ93nYFxs
 ---
 
 ## 🏗️ Arquitetura da Solução
